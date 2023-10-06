@@ -11,8 +11,8 @@ module type Collection = sig
   val iter : ('a -> unit) -> 'a t -> unit
 end
 
-module Collection : Collection = struct
-  include Foldable
+module TODO_Collection : Collection = struct
+  include TODO_Foldable
 
   let size c = failwith "TODO"
   let map f c = failwith "TODO"
@@ -22,4 +22,4 @@ module Collection : Collection = struct
   let iter f c = failwith "TODO"
 end
 
-module CollectionFromFoldable (F : Foldable) : Collection = Collection
+module CollectionFromFoldable (F : Foldable) : Collection = TODO_Collection
