@@ -13,7 +13,7 @@ end
 module TODO_Map = struct
   type ('k, 'v) t = unit (* TODO *)
 
-  let empty = failwith "TODO"
+  let empty = ()
   let get_opt key map = failwith "TODO"
   let set key value map = failwith "TODO"
   let delete key map = failwith "TODO"
