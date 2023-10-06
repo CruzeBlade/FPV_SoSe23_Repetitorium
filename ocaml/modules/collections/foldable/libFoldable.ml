@@ -6,10 +6,12 @@ module type Foldable = sig
   val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b t -> 'a
 end
 
-module TODO_Foldable = struct
-  type 'a t = unit (* TODO *)
+module Foldable : Foldable = struct
+  type 'a t = 'a list
 
-  let empty = failwith "TODO"
-  let insert value foldable = failwith "TODO"
-  let fold_left f acc foldable = failwith "TODO"
+  let empty = []
+  let insert value foldable = value :: foldable
+
+  let rec fold_left f acc foldable =
+    match foldable with [] -> acc | x :: xs -> fold_left f (f acc x) xs
 end
