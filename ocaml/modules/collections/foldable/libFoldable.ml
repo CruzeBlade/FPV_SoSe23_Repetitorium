@@ -9,7 +9,7 @@ end
 module TODO_Foldable = struct
   type 'a t = unit (* TODO *)
 
-  let empty = failwith "TODO"
+  let empty = ()
   let insert value foldable = failwith "TODO"
   let fold_left f acc foldable = failwith "TODO"
 end
