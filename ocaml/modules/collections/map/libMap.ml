@@ -20,4 +20,14 @@ module TODO_Map = struct
   let contains key map = failwith "TODO"
 end
 
-module MapFromCollection (C : Collection) : Map = TODO_Map
+module MapFromCollection (C : Collection) : Map = struct
+  type ('k, 'v) t = ('k * 'v) C.t
+
+  let empty = C.empty
+  let get_opt key map = Option.map snd @@ C.find_opt (fun (k, v) -> key = k) map
+  let delete key map = C.filter (fun (k, _) -> k <> key) map
+  let set key value map = C.insert (key, value) (delete key map)
+
+  let contains key map =
+    match get_opt key map with None -> false | Some _ -> true
+end
