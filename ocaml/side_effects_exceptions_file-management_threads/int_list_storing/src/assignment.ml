@@ -9,14 +9,10 @@ module DiskDataBase : IntListDataBase = struct
   (* Use List.iter next time*)
   let store_int_list filename list =
     let filehandle = open_out filename in
-    let rec impl = function
-      | [] -> ()
-      | x :: xs ->
-          output_string filehandle (string_of_int x ^ "\n");
-          impl xs
-    in
     try
-      impl list;
+      List.iter
+        (fun i -> output_string filehandle (Printf.sprintf "%d\n" i))
+        list;
       close_out filehandle
     with ex ->
       close_out filehandle;
@@ -38,7 +34,7 @@ module DiskDataBase : IntListDataBase = struct
       close_in filehandle;
       raise e
 
-  let remove filename = Sys.remove filename
+  let remove = Sys.remove
 
   let concat in_file1 in_file2 out_file =
     let f1h = open_in in_file1 in
