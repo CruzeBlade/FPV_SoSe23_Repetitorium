@@ -34,7 +34,11 @@ module InMemoryFileSystem : FileSystem = struct
   exception FileSystemException
 
   let init () = []
-  let rec read fs filename = List.assoc filename fs
+
+  let rec read fs filename =
+    match List.assoc_opt filename fs with
+    | None -> raise FileSystemException
+    | Some c -> c
 
   let rec write fs (filename, content) =
     match fs with
@@ -59,26 +63,34 @@ module OnDiskFileSystem : FileSystem = struct
   let init () = ()
 
   let rec read _ filename =
-    let filehandle = open_in filename in
+    let filehandle =
+      try open_in filename with _ -> raise FileSystemException
+    in
     let rec impl acc =
-      try impl acc ^ input_line filehandle with End_of_file -> acc
+      try
+        let line = input_line filehandle in
+        impl acc ^ line
+      with End_of_file -> acc
     in
     try
       let res = impl "" in
       close_in filehandle;
       res
-    with e ->
+    with _ ->
       close_in filehandle;
-      raise e
+      raise FileSystemException
 
   let rec write _ (filename, content) =
-    let filehandle = open_out filename in
+    let filehandle =
+      try open_out filename with _ -> raise FileSystemException
+    in
     try
       output_string filehandle content;
       close_out filehandle
-    with e ->
+    with _ ->
       close_out filehandle;
-      raise e
+      raise FileSystemException
 
-  let rec delete _ filename = Sys.remove filename
+  let rec delete _ filename =
+    try Sys.remove filename with _ -> raise FileSystemException
 end
